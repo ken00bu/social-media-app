@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Get, Query, Res } from '@nestjs/common';
-import { SignInDto } from './dto/sign-in.dto';
+import { SignInDto, SignUpDto } from './dto';
 import { AuthService } from './auth.service';
 import { AuthHelper } from './auth-helper/auth-helper';
 import type { Response } from 'express';
@@ -14,6 +14,29 @@ import type { Response } from 'express';
         return await this.authService.signIn(response, signInDto);
     }
 
+    @Post('/sign-up')
+    async signUp(@Res({passthrough: true}) response: Response, @Body() signUpDto: SignUpDto){
+        return await this.authService.signUp(response, signUpDto);
+    }
+
+    @Get('/check-email-available')
+    async checkEmailAvailable(@Query('email') email: string) {
+        return await this.authService.checkEmailAvailable(email);
+    }
+
+    @Get('/check-username-available')
+    async checkUsernameAvailable(@Query('username') username: string) {
+        return await this.authService.checkUsernameAvailable(username);
+    }
+
+    @Post('/logout')
+    async logout(@Res({passthrough: true}) response: Response) {
+        response.clearCookie('access_token');
+        return {message: 'Logged out successfully'};
+    }
+
+
+    //debuging only
     @Get('/generate-password')
     async generatePassword(@Query('password') password: string){
         return await this.authHelper.hashPassword(password);
