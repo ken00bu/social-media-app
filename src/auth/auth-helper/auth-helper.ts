@@ -17,8 +17,13 @@ export class AuthHelper {
         }
     }
 
-    verifyAccesToken(token: string): any{
-        return 'success'
+    async verifyAccessToken(token: string): Promise< Record<string, any> | false> {
+        try {
+            const payload = await this.jwtService.verifyAsync(token);
+            return payload;
+        } catch (error) {
+            return false;
+        }
     }
 
     async hashPassword(plainPassword: string): Promise<string> {

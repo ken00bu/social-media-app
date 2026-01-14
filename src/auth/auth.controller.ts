@@ -1,7 +1,9 @@
-import { Body, Controller, Post, Get, Query, Res } from '@nestjs/common';
+import { Body, Controller, Post, Get, Query, Res, UseGuards } from '@nestjs/common';
 import { SignInDto, SignUpDto } from './dto';
 import { AuthService } from './auth.service';
 import { AuthHelper } from './auth-helper/auth-helper';
+import { AuthGuard } from './guard/auth.guard';
+
 import type { Response } from 'express';
 
     @Controller('auth')
@@ -37,6 +39,7 @@ import type { Response } from 'express';
 
 
     //debuging only
+    @UseGuards(AuthGuard)
     @Get('/generate-password')
     async generatePassword(@Query('password') password: string){
         return await this.authHelper.hashPassword(password);

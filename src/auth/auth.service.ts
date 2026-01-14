@@ -20,7 +20,11 @@ export class AuthService {
         const isPasswordValid = await this.authHelper.comparePassword(plainPassword, user.password);
         if(!isPasswordValid) throw new UnauthorizedException('Wrong password');
 
-        const jwt = await this.authHelper.generateAccesToken({email: user.email});
+        const jwt = await this.authHelper.generateAccesToken({
+            id: user._id,
+            email: user.email,
+            role: 'user',
+        });
         response.cookie('access_token', jwt, { httpOnly: true });
         return {message: 'Sign-in successful'};
     }
@@ -66,6 +70,23 @@ export class AuthService {
         if(!username) return {available: false, message: 'No username provided'};
         const user = await this.userService.findUserByUsername(username);
         return {available: !user};
+    }
+
+    async validateUser(request, response): Promise<boolean> {
+        const cookies = request.cookies;
+        const token = cookies?.access_token;
+        if(!token) return false;
+
+        const user = await this.authHelper.verifyAccessToken(token);
+        if (!user) return false;
+
+        request.credentials = {
+            id: user.id,
+            email: user.email,
+            role: user.role,
+        }
+
+        return true;
     }
 
 }
