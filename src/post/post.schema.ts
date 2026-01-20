@@ -34,16 +34,16 @@ export class Post {
     @Prop({required: true, default: ''})
     content: string;
 
-    @Prop({maxlength: 10, required: true, default: []})
-    fileUrl: string[];
+    @Prop({maxlength: 5, required: true, default: []})
+    fileUrls: string[];
 
-    @Prop({required: true, default: []})
+    @Prop({default: []})
     topics: string[];
 
-    @Prop({required: true, default: []})
+    @Prop({default: []})
     likes: string[];
 
-    @Prop({required: true, default: []})
+    @Prop({default: []})
     comments: string[];
 }
 

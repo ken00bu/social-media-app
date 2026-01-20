@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
 import { Model } from 'mongoose';
@@ -28,8 +28,13 @@ export class UserService {
     }
 
     async createUser(userData: Partial<User>) {
-        const newUser = new this.userModel(userData);
-        return await newUser.save();
+        
+        try {
+            const newUser = new this.userModel(userData);
+            return await newUser.save();
+        } catch (error) {
+            throw new BadRequestException('Failed to create user');
+        }
     }
 
 }

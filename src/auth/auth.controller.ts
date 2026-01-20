@@ -39,7 +39,6 @@ import type { Response } from 'express';
 
 
     //debuging only
-    @UseGuards(AuthGuard)
     @Get('/generate-password')
     async generatePassword(@Query('password') password: string){
         return await this.authHelper.hashPassword(password);
